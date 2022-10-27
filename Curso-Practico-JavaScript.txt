@@ -1,0 +1,263 @@
+Curso Práctico de JavaScript
+
+* Leyendo HTML desde JavaScript
+
+Tenemos funciones y/o métodos que nos da el entorno de ejecución, el navegador web para SELECCIONAR los elementos que tenemos en el HTML que está ejecutando al código JS.
+Para eso se puede usar querySelector() 
+
+En este caso
+   const p = document.querySelector('p');
+
+está seleccionando NO a todos los párrafos sino al primero que se encontró.
+
+Si lo cambiamos por
+   const p = document.querySelectorAll('p');
+
+al recargar, lo que había guardado en la variable p ya NO es solo un párrafo y ya, sino que es una lista o array con todos los párrafos. Los selecciona TODOS sin importar
+si tienen clases, id...
+
+Si tuviéramos un solo párrafo, sería una lista de un solo elemento.
+
+- Existen muchas funciones para SELECCIONAR ELEMENTOS del HTML como por ejemplo getElementById(), getElementsByClassName, etc.
+- El querySelector() permite utilizar la sintaxis de CSS.
+
+
+* Escribiendo y editando HTML desde JavaScript
+
+Vamos a escribir y a editar HTML (contenidos, párrafos, etiquetas) desde JavaScript
+
+- Cambiar el nombre del título
+
+h1.innerHTML = 'Patito'; // Estamos cambiando el nombre del título
+
+Al recargar vemos que cambió el título h1 Manipulación del DOM básica por Patito
+
+En el index.html sigue el mismo título PERO en el inspector de Elementos al revisar el HTML de la página dice <h1> Patito </h1>
+
+La propiedad innerHTML de los elementos permite modificar el HTML que esté dentro de la etiqueta, dentro del elemento que
+estemos seleccionando. 
+Y esto NO es solamente texto ya que dice innerHTML y NO innerText, es decir no solamente podemos insertar texto sino que también
+podemos insertar etiquetas HTML, o sea podemos escribir HTML dentro de una etiqueta, dentro de un elemento.
+
+h1.innerHTML = 'Patito <br> Feo'; // Escribimos HTML dentro de la etiqueta h1 gracias a la propiedad innerHTML
+
+h1.innerText = 'Patito <br> Feo'; // Lo interpreta TODO como texto, incluso lo que parecería que es código HTML
+
+Esta es la forma más básica de PROTEGERNOS de posibles ataques en el que los usuarios podrían escribir código HTML, incluso
+código malicioso usando la propiedad innerHTML. En cambio si utilizamos innerText, no traduce todo a código HTML sino que TODO
+lo interpreta como texto, hasta lo que parece código HTML
+
+innerHTML es una propiedad que convierte TODO a código HTML
+innerText es una propiedad que convierte TODO a texto
+
+- ¿Qué pasa si queremos darle una clase al elemento HTML?
+
+La forma normal de modificar un atributo es con getAttribute() y setAttribute()
+getAttribute() nos ayuda a LEER alguno de los elementos, de los atributos que tenga el elemento. Por ejemplo, voy a inventarme
+un atributo dentro de la etiqueta h1 con su respectivo valor
+
+En index.html
+
+    <h1 pantalla="platzilg">Manipulación del DOM básica</h1>
+
+En script.js
+
+h1.getAttribute('pantalla') // Aquí estamos leyendo el atributo pantalla del h1
+
+console.log(h1.getAttribute('pantalla'));
+
+Al recargar vemos que se imprime platzilg, o sea el VALOR del ATRIBUTO pantalla. 
+Así podemos acceder a cualquier ATRIBUTO, por ejemplo a las clases....class
+
+console.log(h1.getAttribute('class')); // En este momento dice null en consola porque AÚN NO existe un atributo llamado class
+dentro de h1
+
+En index.html
+	
+    <h1 class="verde" pantalla="platzilg">Manipulación del DOM básica</h1>
+
+En consola ahora dice verde
+
+- Ahora vamos a MODIFICAR EL ATRIBUTO class
+
+En script.js
+
+h1.setAttribute('class', 'rojo'); // Modifica el atributo. AQUÍ le estamos dando un nuevo valor al atributo. El cambio se ve en el inspector de elementos. 
+
+h1.classList.add('rojo'); // classList. es específicamente para modificar las clases. En este caso con .add agrega una clase
+
+En la consola (porque estamos imprimiendo h1) y en el inspector de elementos se ve así <h1 class="verde rojo"...
+La clase verde viene del HMTL por defecto (porque la creamos) y la clase rojo se la agregramos al elemento con JavaScript
+
+h1.classList.remove('verde'); // Elimina una clase...verde es el nombre de la clase
+
+input.value = 456 // Este será el valor por defecto
+Los usuarios siguen pudiendo cambiarlo pero ya nosotros escribimos el valor por defecto.
+
+Esto también se hace desde el index.html así
+
+    <input placeholder="Escribe algo aquí" value="456" />
+
+- Lo que hemos hecho es cambiar lo que ya estaba, es decir ya teníamos un h1, 3 párrafos y un input...a esto le cambiamos algunas cosas.
+
+¿Cómo crear un elemento desde cero?
+
+document.createElement('img'); // Crea un elemento HTML
+
+console.log(document.createElement('img')); // En la consola imprime el HTML de una imagen <img>
+console.log(document.createElement('span')); // Se imprime el HTML de una etiqueta span
+Automáticamente JS supo que una etiqueta se tiene que abrir y cerrar o en el caso de las imágenes se tiene que cerrar a sí misma.
+
+¿Cómo hacemos para que el elemento no solamente aparezca en la consola sino que también lo puedan ver los usuarios en el HTML?
+
+const img = document.createElement('img');
+img.setAttribute('src', 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+
+console.log(img);
+
+Ahora vamos a meter esta imagen en alguna parte. Vamos a usar el párrafo con el selector de id para meter la img ahí
+
+pid.append(img); 
+
+Creamos una imagen con document.createElement(), a esa imagen le pusimos los atributos, la URL...le hicimos lo que teníamos que hacerle, y 
+luego estamos insertando esta imagen dentro de un contenedor, dentro de otro elemento que ya existía en HTML y le estamos diciendo que por
+dentro va a tener a la imagen.
+
+- El querySelector() se usa como si fuera CSS
+
+Ya insertamos la imagen en HTML, los usuarios ya la pueden ver a pesar de que en el index.html nunca hubo ninguna imagen. La agregamos con JS
+
+Como utilizamos append(), no borró el contenido anterior del párrafo sino que simplemente metió la imagen después. Con appendChild() en este caso funciona igual.
+
+¿Cómo podemos borrar el contenido del párrafo y agregar la imagen?
+
+pid.innerHTML = ""; // No estamos borrando el párrafo sino su contenido. 
+pid.appendChild(img); // Y luego si hacemos un append() o appendChild() y recargamos...vemos que ya no aparece el contenido de antes sino que ahora aparece la imagen.
+
+Esto es Manipulación del DOM desde JavaScript, editar o incluso crear nuevos elementos para nuestro HTML utilizando JS.
+Pero no tiene mucho sentido hacerlo desde el principio y que los usuarios lo vean y ya. Lo que tiene sentido es que nuestro HTML cambie cada vez que los usuarios hagan 
+algo como por ejemplo una pregunta, una acción, una interacción, etc.
+
+Vamos a escuchar eventos de JS. Cuando sucedan estos eventos, leer y editar el HTML.
+
+
+* Eventos en JavaScript: interactuando con usuarios
+
+Lo realmente útil es que hagamos toda esta manipulación del DOM cuando los usuarios hagan algo: cuando presionen un botón, hagan click en alguna parte, scroll, pasen el
+mouse por encima de algún elemento, cuando hagan una pregunta, consulten información...es cuando ahora SÍ vale la pena que agarremos JavaScript para editar o cambiar de
+la forma que necesitemos nuestro HTML para que los usuarios vean que la página está viva. Para hacer esto vamos a utilizar los eventos en JS
+
+- La función/método querySelector() funciona más o menos como en CSS
+
+- Ya tenemos seleccionados los elementos en HTML con los que queremos trabajar. Ahora lo que debemos hacer es escuchar los eventos de lo que sea que pase con nuestros
+inputs o botones. El objetivo es que cuando le demos click al botón, tenemos que agarrar los inputs y sus valores y hacer algo con ellos.
+
+- El evento (atributo) onchange es para el caso del input.
+- El evento (atributo) onclick es para el caso del botón.
+
+- El atributo onchange nos permite escuchar cuando los usuarios terminan de escribir algo en un input.
+- Al dar click al botón, se ejecuta el código JS
+- Al recargar y dar click al botón ya estamos ejecutando la función de JS (nuestra propia función)
+
+¿Cómo agarramos esos valores de los inputs cuando le demos click al botón?
+
+console.log(input1.value + input2.value); // concatenación
+
+Si escribo en el primer input 123 y en el segundo 456, al dar click al botón, en la consola dice 123456. Esto es una CONCATENACIÓN.
+Por defecto el input guarda todo lo que escriban los usuarios como un texto, como un string.
+
+Si quisiéramos que fuera una SUMA tendríamos que CONVERTIR estos valores a números.
+Para ello se hace esto:
+
+console.log( parseInt(input1.value) + parseInt(input2.value)); // suma
+
+- La función parseInt() convierte un string en un número entero
+
+- Lo que vamos a hacer es que el párrafo por defecto no tenga nada, que los usuarios no lo puedan ver PERO al darle click al botón, que AHÍ aparezca el resultado de lo que
+hagamos. Para eso primero debemos seleccionar el elemento p del HTML para poder manipularlo. 
+
+Esta es la forma en la que podemos escuchar eventos de los usuarios desde JS. Tenemos que seleccionar a los elementos de HTML desde JS con las funciones como el querySelector()
+y además utilizando atributos como el onclick, onchange, etc....podemos escuchar esos eventos para cuando los usuarios interactuen con nuestra página pues les cambiemos la
+página y les mostremos el resultado que estaban buscando.
+
+Pero hay otra forma de trabajar para reemplazar a esos atributos como el onclick y demás para tener el HTML más limpio y concentrar toda esta lógica en JS. 
+Para eso existe addEventListener
+
+
+* addEventListener
+
+- Vamos a dejar limpio el HTML, es decir sin los atributos onchange y onclick. Ahora el HTML no tiene nada que ver con escuchar eventos. El HTML solo está mostrando contenido y
+guardando cada etiqueta que podamos necesitar en el futuro con un id, una clase, una etiqueta, etc...algo que podamos seleccionar. 
+
+btn.addEventListener('click', btnOnClick);
+
+Esto es el mismo onclick para el botón pero desde JS
+btn es el selector, addEventListener() es un método, 'click' es el nombre del evento, btnOnClick es el código JS/el nombre de la función 
+
+- El método addEventListener() es un escuchador de eventos. 
+Agrega un escuchador de eventos. 
+Escucha cada vez que suceda cierto evento, y cada vez que pase ejecuta el código JS que yo te diga. 
+
+A este método hay que enviarle dos argumentos. El primero es el nombre del evento que queramos ejecutar y el segundo es el código JS que queramos mandar a llamar cuando suceda 
+el evento.
+
+- Este btnOnClick en el HTML cuando lo mandamos a llamar lo teníamos que llamar con paréntesis () PERO en JavaScript cuando estemos utilizando el método addEventListener() NO debemos
+enviarle los paréntesis () a esa función que queramos mandar a llamar cada vez que suceda el evento de 'click' porque el addEventListener se encarga de ejecutarla o "ponerle los 
+paréntesis" para que funcione el código.
+
+La aplicación sigue funcionando igual.
+
+- Los formularios por defecto agarran el último botón que se encuentren en el formulario y lo interpretan como que ese botón es de tipo submit, es decir un botón para enviar el formulario.
+Y la acción por defecto que hacen los formularios para "enviarse" es cambiar la URL. 
+
+En el formulario podríamos especificarle cual es la ruta a la que queremos hacerle una solicitud apenas le demos click a ese botón de submit, que por defecto es el último botón el que agarra
+para escuchar ese evento de submit. 
+
+Pero eso no nos funciona en este caso. No queremos cambiar de página. Queremos que se ejecute el párrafo y ahí aparezca el resultado. 
+
+El código de escuchar el evento de click sigue funcionando, se sigue ejecutando. Pero el formulario por defecto agarra el último botón que tenga por dentro, lo interpreta como que su tipo es 
+de submit y por defecto cuando hay un evento de submit en el formulario tenemos que hacer una solicitud a otra URL enviando los valores de nuestros inputs por la URL...se recarga la página y 
+no podemos ver el resultado. 
+
+- Lo que tenemos que hacer si vamos a trabajar con formularios no es tal cual escuchar el evento de click de un botón sino que podemos en el formulario (etiqueta form) escuchar su evento onsubmit
+(si ese fuera el caso). Pero lo vamos a hacer TODO desde JavaScript.
+
+const form = document.querySelector('#form');
+form.addEventListener('submit', sumarInputValues);
+
+- Al escribir algo en los inputs y dar click en el botón seguimos teniendo el mismo error: apareció el párrafo con el resultado por un momento, por un milisegundo pero después se recargó la página.
+
+- Para evitar este problema, en los paréntesis que NO le estamos enviando a la función que ejecutamos cuando sucede el evento que queremos escuchar en el addEventListener...como NO ponemos los
+paréntesis sino que quien los pone es el mismo método addEventListener cuando sea que escuche ese evento de 'submit' le va a enviar como argumento, es decir que vamos a poder recibir como parámetro
+un evento. Normalmente se llama event. 
+
+event.preventDefault();
+
+Esta vez no se recargó la página.
+Nos dice que es un evento de tipo SubmitEvent, es decir que es un evento de que hicimos submit de un formulario, de que lo queremos enviar y esta propiedad event tiene muchas propiedades...y entre
+estas hay una propiedad llamada defaultPrevented: true la cual indica que ya llamamos al método preventDefault() para que NO ejecute lo que por defecto debería ejecutar el evento, es decir que se
+recargue la página para tratar de enviar en la URL lo que sea que los usuarios hayan escrito en los inputs del formulario. 
+
+event.preventDefault() cancela el evento si este es cancelable, sin detener el resto del funcionamiento del evento, es decir puede ser llamado de nuevo. 
+
+- Si le damos click al botón ya NO estamos escuchando el evento de click del botón sino el evento de submit del formulario, y estamos cancelando lo que por defecto hacía ese evento que era recargar 
+la página para que simplemente nos imprima el resultado.
+
+- Otra forma de resolver este problema:
+
+btn.addEventListener('click', sumarInputValues);
+
+En este caso NO hay que hacer un event.preventDefault() porque el botón por defecto NO hace nada raro con la URL. Pero para que el código funcione hay que decirle en HTML al botón que su tipo ya no
+sea el que le asigne por defecto el formulario sino que sea de tipo button.
+
+El formulario por defecto agarra al último botón que se encuentre y le dice: "Tú eres de tipo submit. Por lo tanto cuando te den click vamos a ejecutar el evento de submit recargando la página y todo
+lo demás, a menos que hagamos un event.preventDefault()"
+
+
+   
+
+
+
+
+
+
